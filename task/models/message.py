@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-
+import base64
 from task.models.role import Role
 
 
@@ -23,4 +23,7 @@ class Message:
             result["name"] = self.name
         if self.tool_calls:
             result["tool_calls"] = self.tool_calls
+        for key, value in self.__dict__.items():
+            if isinstance(value, bytes):
+                result[key] = base64.b64encode(value).decode('utf-8')
         return result
